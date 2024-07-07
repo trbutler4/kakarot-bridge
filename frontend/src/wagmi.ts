@@ -1,17 +1,27 @@
 import { http, createConfig } from 'wagmi'
-import { mainnet, sepolia } from 'wagmi/chains'
+import { kakarotSepolia } from 'wagmi/chains'
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors'
+import { defineChain } from 'viem'
+
+export const kakarotLocal = defineChain({
+  id: 31337, 
+  name: "Kakarot Local",
+  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  rpcUrls: {
+    default: { http: ["http://localhost:8545"]}
+  }
+})
 
 export const config = createConfig({
-  chains: [mainnet, sepolia],
+  chains: [kakarotSepolia, kakarotLocal],
   connectors: [
     injected(),
     coinbaseWallet(),
     walletConnect({ projectId: import.meta.env.VITE_WC_PROJECT_ID }),
   ],
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
+    [kakarotSepolia.id]: http(),
+    [kakarotLocal.id]: http()
   },
 })
 
