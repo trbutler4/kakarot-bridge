@@ -15,8 +15,8 @@ deploy-l1: copy-env
 	yarn hardhat run scripts/deploy.ts --network l1Rpc
 
 wipe: 
- yarn hardhat ignition wipe chain-31337 StarknetMessagingModule\#StarknetMessagingLocal
- #yarn hardhat ignition wipe chain-31337 L1KakarotMessaging\#L1KakarotMessaging
+	yarn hardhat ignition wipe chain-31337 StarknetMessagingModule\#StarknetMessagingLocal
+	yarn hardhat ignition wipe chain-31337 L1KakarotMessaging\#L1KakarotMessaging
 
 copy-env:
 	@echo "Updating .env file with keys from Kakarot RPC container..."
