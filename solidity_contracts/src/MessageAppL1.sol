@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "./L1KakarotMessaging.sol";
+import "./kakarot/L1KakarotMessaging.sol";
 import "./MessageAppL2.sol";
 import "./starknet/IStarknetMessaging.sol";
 
