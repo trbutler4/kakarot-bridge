@@ -3,7 +3,7 @@ pragma solidity >=0.7.0 <0.9.0;
 
 import "kakarot-lib/CairoLib.sol";
 
-contract MessageAppL2 {
+contract BridgeL2 {
     uint256 public receivedMessagesCounter;
 
     // @notice Sends a message to L1.

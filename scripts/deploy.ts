@@ -16,16 +16,13 @@ async function main() {
     StarknetMessagingModule
   );
   const starknetMessagingAddress = await starknetMessaging.getAddress();
-
   console.log(`StarknetMessaging deployed to: ${starknetMessagingAddress}.`);
 
   const { L1KakarotMessaging } = await hre.ignition.deploy(
     L1KakarotMessagingModule,
     { parameters: { L1KakarotMessaging: { starknetMessagingAddress } } }
   );
-
   const address = await L1KakarotMessaging.getAddress();
-
   await account.execute([
     {
       contractAddress: KAKAROT_ADDRESS,
@@ -33,7 +30,6 @@ async function main() {
       entrypoint: "set_authorized_message_sender",
     },
   ]);
-
   console.log(
     `L1KakarotMessaging deployed to: ${address} and authorized for messages.`
   );

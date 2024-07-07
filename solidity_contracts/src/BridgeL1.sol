@@ -3,7 +3,7 @@
 pragma solidity ^0.8.0;
 
 import "./kakarot/L1KakarotMessaging.sol";
-import "./MessageAppL2.sol";
+import "./BridgeL2.sol";
 import "./starknet/IStarknetMessaging.sol";
 
 // Define some custom error as an example.
@@ -12,7 +12,7 @@ error InvalidPayload();
 
 /// @title Test contract to receive / send messages to starknet.
 /// @author Glihm https://github.com/glihm/starknet-messaging-dev
-contract MessageAppL1 {
+contract BridgeL1 {
     IStarknetMessaging private _starknetMessaging;
     IL1KakarotMessaging private _l1KakarotMessaging;
     uint256 private _kakarotAddress;
@@ -39,7 +39,7 @@ contract MessageAppL1 {
         _l1KakarotMessaging.sendMessageToL2{value: msg.value}(
             l2AppAddress,
             0,
-            abi.encodeCall(MessageAppL2.increaseMessagesCounter, 1)
+            abi.encodeCall(BridgeL2.increaseMessagesCounter, 1)
         );
     }
 

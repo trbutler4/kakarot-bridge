@@ -14,6 +14,12 @@ start:
 deploy-l1: copy-env
 	yarn hardhat run scripts/deploy.ts --network l1Rpc
 
+deploy-bridge-l1: copy-env
+	yarn hardhat run scripts/deploy_bridge_l1.ts --network l1Rpc
+
+deploy-bridge-l2: copy-env
+	yarn hardhat run scripts/deploy_bridge_l2.ts --network kakarotRpc
+
 wipe: 
 	yarn hardhat ignition wipe chain-31337 StarknetMessagingModule\#StarknetMessagingLocal
 	yarn hardhat ignition wipe chain-31337 L1KakarotMessaging\#L1KakarotMessaging
