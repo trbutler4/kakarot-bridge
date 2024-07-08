@@ -13,10 +13,6 @@ contract BridgeL2 {
         CairoLib.sendMessageToL1(to, data);
     }
 
-    function increaseMessagesCounter(uint256 amount) external {
-        receivedMessagesCounter += amount;
-    }
-
     function mintERC20Tokens(address recipient, uint256 amount) external {
         receivedMessagesCounter += amount;
         // TODO: Mint ERC20 tokens to the recipient.

@@ -18,7 +18,10 @@ deploy-bridge-l1: copy-env
 	yarn hardhat run scripts/deploy_bridge_l1.ts --network l1Rpc
 
 deploy-bridge-l2: copy-env
-	yarn hardhat run scripts/deploy_bridge_l2.ts --network kakarotRpc
+	export ETH_RPC_URL=http://127.0.0.1:3030
+	#TODO: find a better way to get this from the .env file
+	export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 # this is anvil private key 1
+	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 --private-key $$PRIVATE_KEY
 
 deploy-all: deploy-l1 deploy-bridge-l1 deploy-bridge-l2
 
@@ -29,10 +32,7 @@ wipe-l1-messaging:
 wipe-bridge-l1:
 	yarn hardhat ignition wipe chain-31337 BridgeL1Module\#BridgeL1
 
-wipe-bridge-l2:
-	yarn hardhat ignition wipe chain-1263227476 BridgeL2Module\#BridgeL2
-
-wipe-all: wipe-l1-messaging wipe-bridge-l1 wipe-bridge-l2
+wipe-all: wipe-l1-messaging wipe-bridge-l1
 
 copy-env:
 	@echo "Updating .env file with keys from Kakarot RPC container..."
