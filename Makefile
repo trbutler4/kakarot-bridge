@@ -14,28 +14,19 @@ start:
 deploy-l1: copy-env
 	yarn hardhat run scripts/deploy.ts --network l1Rpc
 
-deploy-bridge-l1: copy-env
+deploy-bridge-l1:
 	yarn hardhat run scripts/deploy_bridge_l1.ts --network l1Rpc
 
-# TODO: this is a temporary solution to deploy the bridge L2 contract,
-# should find a way to do it with ignition
-deploy-bridge-l2: copy-env
-	export ETH_RPC_URL=http://127.0.0.1:3030
-	#TODO: find a better way to get this from the .env file
-	export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 # this is anvil private key 1
-	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 --private-key $$PRIVATE_KEY
-
-deploy-erc20-l1: copy-env
+deploy-erc20-l1:
 	yarn hardhat run scripts/deploy_erc20_l1.ts --network l1Rpc
 
-deploy-erc20-l2: copy-env
-	export ETH_RPC_URL=http://127.0.0.1:3030
-	export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 # this is anvil private key 1
-	export BRIDGE_L2_ADDRESS=0x0165878A594ca255338adfa4d48449f69242Eb8F
-	forge create solidity_contracts/src/ExampleERC20.sol:ExampleERC20 --private-key $$PRIVATE_KEY --constructor-args $$BRIDGE_L2_ADDRESS
+deploy-bridge-l2-forge:
+	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --rpc-url http://127.0.0.1:3030
 
+deploy-erc20-l2-forge:
+	forge create solidity_contracts/src/ExampleERC20L2.sol:ExampleERC20L2 --private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 --constructor-args 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
 
-deploy-all: deploy-l1 deploy-bridge-l1 deploy-bridge-l2
+deploy-l1-all: deploy-l1 deploy-bridge-l1 deploy-erc20-l1
 
 wipe-l1-messaging:
 	yarn hardhat ignition wipe chain-31337 StarknetMessagingModule\#StarknetMessagingLocal
@@ -44,7 +35,8 @@ wipe-l1-messaging:
 wipe-bridge-l1:
 	yarn hardhat ignition wipe chain-31337 BridgeL1Module\#BridgeL1
 
-wipe-all: wipe-l1-messaging wipe-bridge-l1
+wipe-erc20-l1:
+	yarn hardhat ignition wipe chain-31337 ExampleERC20Module\#ExampleERC20L1
 
 copy-env:
 	@echo "Updating .env file with keys from Kakarot RPC container..."

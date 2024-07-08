@@ -7,11 +7,11 @@ if (!BRIDGE_L1_ADDRESS) {
   throw new Error("KAKAROT_ADDRESS is not set in .env");
 }
 
-const ExampleERC20Module = buildModule("ExampleERC20Module", (m) => {
+const ExampleERC20L1Module = buildModule("ExampleERC20L1Module", (m) => {
   const initialOwner = m.getParameter("initialOwner", BRIDGE_L1_ADDRESS);
-  const ExampleERC20 = m.contract("ExampleERC20", [initialOwner]);
+  const ExampleERC20L1 = m.contract("ExampleERC20L1", [initialOwner]);
 
-  return { ExampleERC20 };
+  return { ExampleERC20L1 };
 });
 
-export default ExampleERC20Module;
+export default ExampleERC20L1Module;

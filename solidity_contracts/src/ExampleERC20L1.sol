@@ -7,13 +7,13 @@ import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
 
-contract ExampleERC20 is ERC20, ERC20Burnable, Ownable, ERC20Permit {
+contract ExampleERC20L1 is ERC20, ERC20Burnable, Ownable, ERC20Permit {
     constructor(
         address initialOwner
     )
-        ERC20("ExampleERC20", "TEST")
+        ERC20("ExampleERC20L1", "TEST")
         Ownable(initialOwner)
-        ERC20Permit("ExampleERC20")
+        ERC20Permit("ExampleERC20L1")
     {}
 
     function mint(address to, uint256 amount) public onlyOwner {
