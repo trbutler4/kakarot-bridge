@@ -34,6 +34,12 @@ const config: HardhatUserConfig = {
     cache: "./cache_hardhat",
     artifacts: "./artifacts",
   },
+  ignition: {
+    blockPollingInterval: 3_000,
+    timeBeforeBumpingFees: 3 * 60 * 1_000,
+    maxFeeBumps: 0,
+    requiredConfirmations: 1
+  }
 };
 
 export default config;
