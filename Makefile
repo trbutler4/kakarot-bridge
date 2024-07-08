@@ -23,6 +23,12 @@ deploy-bridge-l2: copy-env
 	export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 # this is anvil private key 1
 	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 --private-key $$PRIVATE_KEY
 
+deploy-erc20-l1: copy-env
+	export ETH_RPC_URL=http://127.0.0.1:3030
+	export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 # this is anvil private key 1
+	forge create solidity_contracts/src/ExampleERC20.sol:ExampleERC20 --private-key $$PRIVATE_KEY
+
+
 deploy-all: deploy-l1 deploy-bridge-l1 deploy-bridge-l2
 
 wipe-l1-messaging:
