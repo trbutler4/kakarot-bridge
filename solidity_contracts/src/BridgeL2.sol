@@ -18,7 +18,7 @@ contract BridgeL2 {
     }
 
     function mintERC20Tokens(address recipient, uint256 amount) external {
-        this.increaseMessagesCounter(amount); // for testing
+        receivedMessagesCounter += amount;
         // TODO: Mint ERC20 tokens to the recipient.
     }
 }

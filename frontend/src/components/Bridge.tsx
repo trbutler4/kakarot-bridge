@@ -1,7 +1,7 @@
-import { useBridgeL1 } from "../hooks/useBridgeL1";
-
 import bridgeL1Config from "../data/bridgeL1Data.json";
 import starknetMessagingData from "../data/starknetMessagingData.json";
+
+import bridgeL2Config from "../data/bridgeL2Data.json";
 
 import { useWriteContract } from "wagmi";
 import { useWaitForTransactionReceipt } from "wagmi";
@@ -28,7 +28,7 @@ export const Bridge = () => {
       address: bridgeL1Config.address as `0x${string}`,
       abi: bridgeL1Config.abi,
       functionName: "bridgeToL2",
-      args: [starknetMessagingData.address],
+      args: [bridgeL2Config.address],
       value: value,
     });
   };
