@@ -18,9 +18,8 @@ async function main() {
   const file = fs.readFileSync(bridgeL1Artifact, "utf8")
   const json = JSON.parse(file)
   const abi = json.abi
-
   const bridgeL1Data = "./frontend/src/data/bridgeL1Data.json"
-  const bridgeL1Json = `{ "address": ${bridgeL1Address}, "abi": ${abi}}`
+  const bridgeL1Json = JSON.stringify({ address: bridgeL1Address, abi: abi})
   fs.writeFileSync(bridgeL1Data, bridgeL1Json)
 }
 
