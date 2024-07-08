@@ -19,15 +19,9 @@ contract BridgeL1 {
     uint256 public receivedMessagesCounter;
 
     /// @notice Constructor.
-    /// @param starknetMessaging The address of the StarknetMessaging contract.
     /// @param l1KakarotMessaging The address of the L1KakarotMessaging contract.
     /// @param kakarotAddress The Starknet address, on L2, of the Kakarot contract.
-    constructor(
-        address starknetMessaging,
-        address l1KakarotMessaging,
-        uint256 kakarotAddress
-    ) {
-        _starknetMessaging = IStarknetMessaging(starknetMessaging);
+    constructor(address l1KakarotMessaging, uint256 kakarotAddress) {
         _l1KakarotMessaging = IL1KakarotMessaging(l1KakarotMessaging);
         _kakarotAddress = kakarotAddress;
     }
@@ -39,7 +33,7 @@ contract BridgeL1 {
         _l1KakarotMessaging.sendMessageToL2{value: msg.value}(
             l2BridgeAddress,
             0,
-            abi.encodeCall(BridgeL2.mintERC20Tokens, (msg.sender, 1))
+            abi.encodeCall(BridgeL2.mintERC20Tokens, (address(msg.sender), 1))
         );
     }
 
