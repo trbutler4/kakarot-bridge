@@ -17,13 +17,15 @@ deploy-l1: copy-env
 deploy-bridge-l1: copy-env
 	yarn hardhat run scripts/deploy_bridge_l1.ts --network l1Rpc
 
+# TODO: this is a temporary solution to deploy the bridge L2 contract,
+# should find a way to do it with ignition
 deploy-bridge-l2: copy-env
 	export ETH_RPC_URL=http://127.0.0.1:3030
 	#TODO: find a better way to get this from the .env file
 	export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 # this is anvil private key 1
 	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 --private-key $$PRIVATE_KEY
 
-deploy-erc20-l1: copy-env
+deploy-erc20-l2: copy-env
 	export ETH_RPC_URL=http://127.0.0.1:3030
 	export PRIVATE_KEY=0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 # this is anvil private key 1
 	forge create solidity_contracts/src/ExampleERC20.sol:ExampleERC20 --private-key $$PRIVATE_KEY
