@@ -4,14 +4,21 @@ import bridgeL1Config from "../data/bridgeL1Data.json";
 import starknetMessagingData from "../data/starknetMessagingData.json";
 
 import { useWriteContract } from "wagmi";
+import { useWaitForTransactionReceipt } from "wagmi";
 
 export const Bridge = () => {
   const {
-    data: bridgeL1Data,
+    data: bridgeL1Hash,
     writeContract: writeContractBridgeL1,
     isError: isBridgeL1Error,
     error: bridgeL1Error,
+    isPending: isBridgeL1Pending,
   } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: bridgeL1Hash,
+    });
 
   const handleBridgeL1 = () => {
     console.log("Initiating bridge L1 to L2...");
@@ -30,7 +37,10 @@ export const Bridge = () => {
     <div>
       <h1>Bridge</h1>
       <button onClick={handleBridgeL1}>Bridge to L2</button>
-      {bridgeL1Data && <div>{JSON.stringify(bridgeL1Data, null, 2)}</div>}
+      {isBridgeL1Pending && <div>Loading...</div>}
+      {isConfirming && <div>Confirming...</div>}
+      {isConfirmed && <div>Transaction confirmed</div>}
+      {bridgeL1Hash && <div>{JSON.stringify(bridgeL1Hash, null, 2)}</div>}
       {isBridgeL1Error && <div>{JSON.stringify(bridgeL1Error)}</div>}
     </div>
   );
