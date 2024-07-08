@@ -20,9 +20,15 @@ deploy-bridge-l1: copy-env
 deploy-bridge-l2: copy-env
 	yarn hardhat run scripts/deploy_bridge_l2.ts --network kakarotRpc
 
-wipe: 
+wipe-l1-messaging:
 	yarn hardhat ignition wipe chain-31337 StarknetMessagingModule\#StarknetMessagingLocal
 	yarn hardhat ignition wipe chain-31337 L1KakarotMessaging\#L1KakarotMessaging
+
+wipe-bridge-l1:
+	yarn hardhat ignition wipe chain-31337 BridgeL1Module\#BridgeL1
+
+wipe-bridge-l2:
+	yarn hardhat ignition wipe chain-1263227476 BridgeL2Module\#BridgeL2
 
 copy-env:
 	@echo "Updating .env file with keys from Kakarot RPC container..."
