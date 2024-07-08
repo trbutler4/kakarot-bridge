@@ -33,7 +33,7 @@ contract BridgeL1 {
         _l1KakarotMessaging.sendMessageToL2{value: msg.value}(
             l2BridgeAddress,
             0,
-            abi.encodeCall(BridgeL2.mintERC20Tokens, (address(msg.sender), 1))
+            abi.encodeCall(BridgeL2.mintERC20Tokens, (address(msg.sender), 100))
         );
     }
 

@@ -22,7 +22,6 @@ export const Bridge = () => {
 
   const handleBridgeL1 = () => {
     console.log("Initiating bridge L1 to L2...");
-    const message = 1; // TODO: update this to be calldata for minting erc20s
     const value = BigInt(0.0001 * 1e18); // TODO: accept this as an input
     writeContractBridgeL1({
       address: bridgeL1Config.address as `0x${string}`,
@@ -40,7 +39,7 @@ export const Bridge = () => {
       {isBridgeL1Pending && <div>Loading...</div>}
       {isConfirming && <div>Confirming...</div>}
       {isConfirmed && <div>Transaction confirmed</div>}
-      {bridgeL1Hash && <div>{JSON.stringify(bridgeL1Hash, null, 2)}</div>}
+      {bridgeL1Hash && <div>{JSON.stringify(bridgeL1Hash)}</div>}
       {isBridgeL1Error && <div>{JSON.stringify(bridgeL1Error)}</div>}
     </div>
   );
