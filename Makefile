@@ -5,7 +5,7 @@ LOCAL_ENV_PATH := .env
 MAKE := make
 
 setup:
-	git submodule update --init --recursive && yarn install && cp .env.example .env
+	git submodule update --init --recursive && yarn install
 
 start:
 	@echo "Starting Kakarot (L2 node) and Anvil (L1 node)"
