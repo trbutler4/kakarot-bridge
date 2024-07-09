@@ -38,6 +38,8 @@ contract BridgeL1 {
         address l1ERC20Address,
         uint256 amount
     ) external payable {
+        receivedMessagesCounter += 1;
+
         // escrow the tokens
         _erc20 = IERC20(l1ERC20Address);
         _erc20.transferFrom(msg.sender, address(this), amount);
