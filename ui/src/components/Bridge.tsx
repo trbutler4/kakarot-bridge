@@ -59,7 +59,7 @@ export const Bridge = () => {
   };
 
   return (
-    <div className="w-2/3 h-2/3 border-2 rounded-xl p-6 max-w-[40vw]">
+    <div className="w-2/3 h-2/3 border-2 rounded-xl p-6 max-w-[40vw] min-w-[400px]">
       <div className="flex flex-col justify-evenly space-y-4">
         <TokenInput ticker="$TEST" label="Ethereum L1" />
         <TokenInput ticker="$TEST" label="Kakarot L2" />
