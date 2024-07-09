@@ -1,6 +1,24 @@
 import { Button } from "./Button";
+import { useBridge, useApprove } from "../hooks";
 
 export const Bridge = () => {
+  const {
+    handleBridgeL1,
+    isConfirming,
+    isConfirmed,
+    isBridgeL1Error,
+    bridgeL1Error,
+    isBridgeL1Pending,
+  } = useBridge();
+
+  const {
+    handleApprove,
+    isApproved,
+    isApproving,
+    isApproveError,
+    approveError,
+  } = useApprove();
+
   const handleFillMax = () => {
     // TODO
     throw new Error("not implemented");
@@ -47,26 +65,12 @@ export const Bridge = () => {
         <TokenInput ticker="$TEST" label="Kakarot L2" />
       </div>
       <div className="w-full pt-8">
-        <Button onClick={() => console.log("TODO")} label="Bridge" />
+        <Button
+          onClick={() => console.log("TODO")}
+          label="Bridge"
+          className="font-bold tracking-wide text-xl text-kkrt_green"
+        />
       </div>
-    </div>
-  );
-
-  return (
-    <div className="flex flex-col">
-      <h1>Bridge</h1>
-
-      <button onClick={handleApprove}>Approve</button>
-      {isApproving && <div>Approving...</div>}
-      {isApproved && <div>Approved!</div>}
-      {isApproveError && <div>{JSON.stringify(approveError, null, 2)}</div>}
-
-      <button onClick={handleBridgeL1}>Bridge to L2</button>
-      {isBridgeL1Pending && <div>Loading...</div>}
-      {isConfirming && <div>Confirming...</div>}
-      {isConfirmed && <div>Transaction confirmed</div>}
-      {bridgeL1Hash && <div>{JSON.stringify(bridgeL1Hash, null, 2)}</div>}
-      {isBridgeL1Error && <div>{JSON.stringify(bridgeL1Error, null, 2)}</div>}
     </div>
   );
 };

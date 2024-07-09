@@ -25,6 +25,7 @@ export const ConnectButton = () => {
           ? truncatedAddr(account.address)
           : "Connect"
       }
+      className="text-kkrt_green"
     />
   );
 };
