@@ -1,7 +1,22 @@
 import { Button } from "./Button";
 import { useBridge, useApprove } from "../hooks";
+import { useEffect, useState } from "react";
+import { useBalance } from "wagmi";
+import exampleERC20L1 from "../data/exampleERC20L1Data.json";
 
 export const Bridge = () => {
+  const [bridgeAmount, setBridgeAmount] = useState<number>(0);
+
+  const {
+    data: balance,
+    isError,
+    error,
+    isLoading,
+  } = useBalance({
+    address: exampleERC20L1.address as `0x${string}`,
+    chainId: 31337,
+  });
+
   const {
     handleBridgeL1,
     isConfirming,
@@ -19,19 +34,14 @@ export const Bridge = () => {
     approveError,
   } = useApprove();
 
-  const handleFillMax = () => {
-    // TODO
-    throw new Error("not implemented");
-  };
-
-  const balance = "0.000"; // TODO: fetch balance
-
   const TokenInput = ({ ticker, label }: { ticker: string; label: string }) => {
     return (
       <div>
         <div className="flex flex-row justify-between">
           <p className="font-semibold text-lg">{label}</p>
-          <p className="font-thin text-sm items-end">{balance}</p>
+          <p className="font-thin text-sm items-end">
+            {balance ? balance.value.toString() : ""}
+          </p>
         </div>
         <div className="flex flex-row w-full">
           <div className="border rounded-s-md px-2 font-semibold flex justify-center items-center">
@@ -44,13 +54,16 @@ export const Bridge = () => {
                 placeholder="Enter amount"
                 className="w-full font-light"
               />
-              <button
-                type="button"
-                onClick={handleFillMax}
-                className="opacity-50 font-light p-1"
-              >
-                max
-              </button>
+              {/*
+
+                <button
+                  type="button"
+                  onClick={handleFillMax}
+                  className="opacity-50 font-light p-1"
+                >
+                  max
+                </button>
+                */}
             </div>
           </div>
         </div>
@@ -66,11 +79,19 @@ export const Bridge = () => {
       </div>
       <div className="w-full pt-8">
         <Button
-          onClick={() => console.log("TODO")}
-          label="Bridge"
-          className="font-bold tracking-wide text-xl text-kkrt_green"
+          onClick={
+            isApproved
+              ? () => handleBridgeL1(bridgeAmount)
+              : () => handleApprove(bridgeAmount)
+          }
+          label={isApproved ? "Bridge" : "Approve"}
+          className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
         />
       </div>
+      {!isApproved && isApproving && <p>Approving...</p>}
+      {!isApproved && isApproveError && (
+        <p>{JSON.stringify(approveError, null, 2)}</p>
+      )}
     </div>
   );
 };
