@@ -29,11 +29,19 @@ contract BridgeL1 {
     /// @notice Initiates the bridging process
     /// @dev Must be called with a value sufficient to pay for the L1 message fee.
     /// @param l2BridgeAddress The address of the L2 contract to trigger.
-    function bridgeToL2(address l2BridgeAddress) external payable {
+    function bridgeToL2(
+        address l2BridgeAddress,
+        address l1ERC20Address,
+        address l2ERC20Address
+    ) external payable {
+        // TODO: burn tokens
         _l1KakarotMessaging.sendMessageToL2{value: msg.value}(
             l2BridgeAddress,
             0,
-            abi.encodeCall(BridgeL2.mintERC20Tokens, (address(msg.sender), 100))
+            abi.encodeCall(
+                BridgeL2.mintERC20Tokens,
+                (address(msg.sender), l2ERC20Address, 100)
+            )
         );
     }
 

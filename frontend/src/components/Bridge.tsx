@@ -1,5 +1,7 @@
 import bridgeL1Config from "../data/bridgeL1Data.json";
 import starknetMessagingData from "../data/starknetMessagingData.json";
+import exampleERC20L2 from "../data/ExampleERC20L2Data.json";
+import exampleERC20L1 from "../data/exampleERC20L1Data.json";
 
 import bridgeL2Config from "../data/bridgeL2Data.json";
 
@@ -27,7 +29,11 @@ export const Bridge = () => {
       address: bridgeL1Config.address as `0x${string}`,
       abi: bridgeL1Config.abi,
       functionName: "bridgeToL2",
-      args: [bridgeL2Config.address],
+      args: [
+        bridgeL2Config.address,
+        exampleERC20L1.address,
+        exampleERC20L2.address,
+      ],
       value: value,
     });
   };
