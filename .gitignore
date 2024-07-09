@@ -27,3 +27,6 @@ ignition/deployments
 # solidity-coverage files
 /coverage
 /coverage.json
+
+# UI files
+.DS_store

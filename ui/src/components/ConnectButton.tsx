@@ -1,4 +1,5 @@
 import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { Button } from "./Button";
 
 export const ConnectButton = () => {
   const account = useAccount();
@@ -17,14 +18,13 @@ export const ConnectButton = () => {
   };
 
   return (
-    <button
-      type="button"
+    <Button
       onClick={handleConnection}
-      className="p-2 bg-kkrt_orange rounded-xl px-4"
-    >
-      {account.status === "connected"
-        ? truncatedAddr(account.address)
-        : "Connect"}
-    </button>
+      label={
+        account.status === "connected"
+          ? truncatedAddr(account.address)
+          : "Connect"
+      }
+    />
   );
 };

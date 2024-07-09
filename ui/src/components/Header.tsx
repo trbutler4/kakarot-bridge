@@ -5,9 +5,11 @@ export const Header = () => {
   return (
     <div className="flex w-full justify-between p-4">
       <div className="flex justify-center items-center">
-        <img src={kkrtLogo} alt="Kakarot Logo" width={128} height={128} />
+        <img src={kkrtLogo} alt="Kakarot Logo" width={156} height={156} />
       </div>
-      <ConnectButton />
+      <div className="w-2/7">
+        <ConnectButton />
+      </div>
     </div>
   );
 };
