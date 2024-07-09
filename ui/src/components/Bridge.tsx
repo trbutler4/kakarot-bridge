@@ -1,21 +1,27 @@
 import { Button } from "./Button";
 import { useBridge, useApprove } from "../hooks";
 import { useEffect, useState } from "react";
-import { useBalance } from "wagmi";
+import { useBalance, useReadContract, useAccount } from "wagmi";
 import exampleERC20L1 from "../data/exampleERC20L1Data.json";
 
 export const Bridge = () => {
   const [bridgeAmount, setBridgeAmount] = useState<number>(0);
+  const account = useAccount();
 
   const {
     data: balance,
-    isError,
-    error,
-    isLoading,
-  } = useBalance({
+    isError: isBalanceError,
+    error: balanceError,
+    isFetched: balanceFetched,
+  } = useReadContract({
+    abi: exampleERC20L1.abi,
     address: exampleERC20L1.address as `0x${string}`,
-    chainId: 31337,
+    functionName: "balanceOf",
+    args: [account.address],
   });
+  if (isBalanceError) {
+    console.error(balanceError);
+  }
 
   const {
     handleBridgeL1,
@@ -40,7 +46,7 @@ export const Bridge = () => {
         <div className="flex flex-row justify-between">
           <p className="font-semibold text-lg">{label}</p>
           <p className="font-thin text-sm items-end">
-            {balance ? balance.value.toString() : ""}
+            {balanceFetched && balance}
           </p>
         </div>
         <div className="flex flex-row w-full">

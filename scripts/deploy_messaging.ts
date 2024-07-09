@@ -32,7 +32,7 @@ async function main() {
   console.log(`StarknetMessaging deployed to: ${starknetMessagingAddress}.`);
   updateFrontendData(
     "ignition/deployments/chain-31337/artifacts/StarknetMessagingModule#StarknetMessagingLocal.json",
-    "./frontend/src/data/starknetMessagingData.json",
+    "./ui/src/data/starknetMessagingData.json",
     starknetMessagingAddress,
   );
 
@@ -53,7 +53,7 @@ async function main() {
   );
   updateFrontendData(
     "/Users/iv-personal/Projects/kakarot-bridge/ignition/deployments/chain-31337/artifacts/L1KakarotMessaging#L1KakarotMessaging.json",
-    "./frontend/src/data/L1KakarotMessagingData.json",
+    "./ui/src/data/L1KakarotMessagingData.json",
     address,
   );
 }

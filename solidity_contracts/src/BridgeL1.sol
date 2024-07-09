@@ -35,10 +35,11 @@ contract BridgeL1 {
     function bridgeToL2(
         address l2BridgeAddress,
         address l2ERC20Address,
+        address l1ERC20Address,
         uint256 amount
     ) external payable {
         // escrow the tokens
-        _erc20 = IERC20(l2ERC20Address);
+        _erc20 = IERC20(l1ERC20Address);
         _erc20.transferFrom(msg.sender, address(this), amount);
 
         // sending mint message to L2

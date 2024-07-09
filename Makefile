@@ -14,18 +14,18 @@ start:
 deploy-messaging-l1: copy-env
 	yarn hardhat run scripts/deploy_messaging.ts --network l1Rpc
 
-deploy-bridge-l1:
+deploy-bridge-l1: copy-env
 	yarn hardhat run scripts/deploy_bridge_l1.ts --network l1Rpc
 
-deploy-erc20-l1:
+deploy-erc20-l1: copy-env
 	yarn hardhat run scripts/deploy_erc20_l1.ts --network l1Rpc
 
-deploy-bridge-l2-forge:
+deploy-bridge-l2-forge: copy-env
 	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 \
 	--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
 	--rpc-url http://127.0.0.1:3030
 
-deploy-erc20-l2-forge:
+deploy-erc20-l2-forge: copy-env
 	forge create solidity_contracts/src/ExampleERC20.sol:ExampleERC20 \
 	--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
 	--rpc-url http://127.0.0.1:3030 \

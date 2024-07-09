@@ -18,7 +18,7 @@ async function main() {
   const file = fs.readFileSync(exampleERC20Artifact, "utf8");
   const json = JSON.parse(file);
   const abi = json.abi;
-  const exampleERC20L1Data = "./frontend/src/data/exampleERC20L1Data.json";
+  const exampleERC20L1Data = "./ui/src/data/exampleERC20L1Data.json";
   const exampleERC20L1Json = JSON.stringify({
     address: exampleErc20L1Address,
     abi: abi,

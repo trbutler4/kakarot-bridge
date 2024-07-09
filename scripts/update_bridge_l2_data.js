@@ -13,7 +13,7 @@ async function main() {
   const file = fs.readFileSync(bridgeL2Artifact, "utf8");
   const json = JSON.parse(file);
   const abi = json.abi;
-  const bridgeL2Data = "./frontend/src/data/bridgeL2Data.json";
+  const bridgeL2Data = "./ui/src/data/bridgeL2Data.json";
   const bridgeL2Json = JSON.stringify({ address: cmdArgs[0], abi: abi });
   fs.writeFileSync(bridgeL2Data, bridgeL2Json);
 }
