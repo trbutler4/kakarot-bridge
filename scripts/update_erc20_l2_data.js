@@ -9,7 +9,7 @@ async function main() {
   }
 
   const exampleERC20Artifact =
-    "artifacts/solidity_contracts/src/ExampleERC20L2.sol/ExampleERC20L2.json";
+    "artifacts/solidity_contracts/src/ExampleERC20.sol/ExampleERC20.json";
   const file = fs.readFileSync(exampleERC20Artifact, "utf8");
   const json = JSON.parse(file);
   const abi = json.abi;

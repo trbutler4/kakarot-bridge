@@ -5,6 +5,7 @@ pragma solidity ^0.8.0;
 import "./kakarot/L1KakarotMessaging.sol";
 import "./BridgeL2.sol";
 import "./starknet/IStarknetMessaging.sol";
+import "../lib/openzeppelin-contracts/contracts/interfaces/IERC20.sol";
 
 // Define some custom error as an example.
 // It saves a lot's of space to use those custom error instead of strings.
@@ -15,6 +16,8 @@ error InvalidPayload();
 contract BridgeL1 {
     IStarknetMessaging private _starknetMessaging;
     IL1KakarotMessaging private _l1KakarotMessaging;
+    IERC20 private _erc20;
+
     uint256 private _kakarotAddress;
     uint256 public receivedMessagesCounter;
 
@@ -31,16 +34,20 @@ contract BridgeL1 {
     /// @param l2BridgeAddress The address of the L2 contract to trigger.
     function bridgeToL2(
         address l2BridgeAddress,
-        address l1ERC20Address,
-        address l2ERC20Address
+        address l2ERC20Address,
+        uint256 amount
     ) external payable {
-        // TODO: burn tokens
+        // escrow the tokens
+        _erc20 = IERC20(l2ERC20Address);
+        _erc20.transferFrom(msg.sender, address(this), amount);
+
+        // sending mint message to L2
         _l1KakarotMessaging.sendMessageToL2{value: msg.value}(
             l2BridgeAddress,
             0,
             abi.encodeCall(
-                BridgeL2.mintERC20Tokens,
-                (address(msg.sender), l2ERC20Address, 100)
+                BridgeL2.mintL2ERC20Tokens,
+                (address(msg.sender), l2ERC20Address, amount)
             )
         );
     }
