@@ -19,7 +19,6 @@ export const Bridge = () => {
     console.error(l1BalanceResult.error);
   }
 
-  /*
   const l2BalanceResult = useReadContract({
     abi: exampleERC20L2.abi,
     address: exampleERC20L2.address as `0x${string}`,
@@ -29,7 +28,6 @@ export const Bridge = () => {
   if (l2BalanceResult.isError) {
     console.error(l2BalanceResult.error);
   }
-  */
 
   const { data: symbol, isFetched: symbolFetched } = useReadContract({
     abi: exampleERC20L1.abi,
@@ -118,7 +116,6 @@ export const Bridge = () => {
         </div>
       </div>
       <div className="w-full pt-8">
-        {bridgeAmount && (
           <Button
             onClick={
               isApproved
@@ -128,7 +125,6 @@ export const Bridge = () => {
             label={isApproved ? "Bridge" : "Approve"}
             className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
           />
-        )}
       </div>
     </div>
   );

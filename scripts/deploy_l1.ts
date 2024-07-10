@@ -76,16 +76,6 @@ async function main() {
     "./ui/src/data/bridgeL1Data.json",
     address,
   );
-
-  const bridgeL1Artifact =
-    "./ignition/deployments/chain-31337/artifacts/BridgeL1Module#BridgeL1.json";
-
-  const file = fs.readFileSync(bridgeL1Artifact, "utf8");
-  const json = JSON.parse(file);
-  const abi = json.abi;
-  const bridgeL1Data = "./ui/src/data/bridgeL1Data.json";
-  const bridgeL1Json = JSON.stringify({ address: bridgeL1Address, abi: abi });
-  fs.writeFileSync(bridgeL1Data, bridgeL1Json);
 }
 
 main().catch(console.error);
