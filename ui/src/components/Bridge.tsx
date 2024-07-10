@@ -6,7 +6,7 @@ import exampleERC20L1 from "../data/exampleERC20L1Data.json";
 import exampleERC20L2 from "../data/ExampleERC20L2Data.json";
 
 export const Bridge = () => {
-  const [bridgeAmount, setBridgeAmount] = useState<number>("");
+  const [bridgeAmount, setBridgeAmount] = useState<number | undefined>();
   const account = useAccount();
 
   const l1BalanceResult = useReadContract({
@@ -31,7 +31,7 @@ export const Bridge = () => {
   }
   */
 
-  const { data: symbol } = useReadContract({
+  const { data: symbol, isFetched: symbolFetched } = useReadContract({
     abi: exampleERC20L1.abi,
     address: exampleERC20L1.address as `0x${string}`,
     functionName: "symbol",
@@ -80,7 +80,7 @@ export const Bridge = () => {
           </div>
           <div className="flex flex-row w-full">
             <div className="border rounded-s-md px-2 font-semibold flex justify-center items-center">
-              {symbol as string}
+              {symbolFetched && (symbol as string)}
             </div>
             <div className="border rounded-e-md px-2 w-full">
               <div className="flex flex-row justify-between">
@@ -118,15 +118,17 @@ export const Bridge = () => {
         </div>
       </div>
       <div className="w-full pt-8">
-        <Button
-          onClick={
-            isApproved
-              ? () => handleBridgeL1(bridgeAmount * 1e18)
-              : () => handleApprove(bridgeAmount * 1e18)
-          }
-          label={isApproved ? "Bridge" : "Approve"}
-          className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
-        />
+        {bridgeAmount && (
+          <Button
+            onClick={
+              isApproved
+                ? () => handleBridgeL1(bridgeAmount * 1e18)
+                : () => handleApprove(bridgeAmount * 1e18)
+            }
+            label={isApproved ? "Bridge" : "Approve"}
+            className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
+          />
+        )}
       </div>
     </div>
   );

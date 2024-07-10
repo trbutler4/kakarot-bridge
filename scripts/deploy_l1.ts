@@ -1,6 +1,8 @@
 import hre from "hardhat";
 import StarknetMessagingModule from "../ignition/modules/starknetMessaging";
 import L1KakarotMessagingModule from "../ignition/modules/L1KakarotMessaging";
+import BridgeL1Module from "../ignition/modules/bridgeL1";
+import ExampleERC20L1Module from "../ignition/modules/exampleERC20L1";
 import { getTestProvider, getTestAccount } from "./config";
 import fs from "fs";
 
@@ -31,7 +33,7 @@ async function main() {
   const starknetMessagingAddress = await starknetMessaging.getAddress();
   console.log(`StarknetMessaging deployed to: ${starknetMessagingAddress}.`);
   updateFrontendData(
-    "ignition/deployments/chain-31337/artifacts/StarknetMessagingModule#StarknetMessagingLocal.json",
+    "./ignition/deployments/chain-31337/artifacts/StarknetMessagingModule#StarknetMessagingLocal.json",
     "./ui/src/data/starknetMessagingData.json",
     starknetMessagingAddress,
   );
@@ -52,10 +54,38 @@ async function main() {
     `L1KakarotMessaging deployed to: ${address} and authorized for messages.`,
   );
   updateFrontendData(
-    "/Users/iv-personal/Projects/kakarot-bridge/ignition/deployments/chain-31337/artifacts/L1KakarotMessaging#L1KakarotMessaging.json",
+    "./ignition/deployments/chain-31337/artifacts/L1KakarotMessaging#L1KakarotMessaging.json",
     "./ui/src/data/L1KakarotMessagingData.json",
     address,
   );
+
+  const { ExampleERC20L1 } = await hre.ignition.deploy(ExampleERC20L1Module);
+  const exampleErc20L1Address = await ExampleERC20L1.getAddress();
+  console.log(`Example ERC20 L1 deployed to ${exampleErc20L1Address}`);
+  updateFrontendData(
+    "./ignition/deployments/chain-31337/artifacts/ExampleERC20L1Module#ExampleERC20.json",
+    "./ui/src/data/exampleERC20L1Data.json",
+    address,
+  );
+
+  const { bridgeL1 } = await hre.ignition.deploy(BridgeL1Module);
+  const bridgeL1Address = await bridgeL1.getAddress();
+  console.log(`BridgeL1 deployed to ${bridgeL1Address}`);
+  updateFrontendData(
+    "./ignition/deployments/chain-31337/artifacts/BridgeL1Module#BridgeL1.json",
+    "./ui/src/data/bridgeL1Data.json",
+    address,
+  );
+
+  const bridgeL1Artifact =
+    "./ignition/deployments/chain-31337/artifacts/BridgeL1Module#BridgeL1.json";
+
+  const file = fs.readFileSync(bridgeL1Artifact, "utf8");
+  const json = JSON.parse(file);
+  const abi = json.abi;
+  const bridgeL1Data = "./ui/src/data/bridgeL1Data.json";
+  const bridgeL1Json = JSON.stringify({ address: bridgeL1Address, abi: abi });
+  fs.writeFileSync(bridgeL1Data, bridgeL1Json);
 }
 
 main().catch(console.error);
