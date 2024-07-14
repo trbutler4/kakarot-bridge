@@ -4,6 +4,8 @@ SOL_CONTRACTS_PATH := solidity_contracts
 LOCAL_ENV_PATH := .env
 MAKE := make
 
+include .env
+
 setup:
 	git submodule update --init --recursive && yarn install
 
@@ -16,14 +18,14 @@ deploy-l1: copy-env
 
 deploy-bridge-l2-forge:
 	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 \
-	--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
+	--private-key ${ANVIL_PKEY_1} \
+	--rpc-url ${KAKAROT_RPC_URL}
 
 deploy-erc20-l2-forge:
 	forge create solidity_contracts/src/ExampleERC20L2.sol:ExampleERC20L2 \
-	--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
-	--constructor-args 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 # this is l2 bridge address
-
-deploy-l2: deploy-bridge-l2-forge deploy-erc20-l2-forge
+	--private-key ${ANVIL_PKEY_1} \
+	--rpc-url ${KAKAROT_RPC_URL} \
+	--constructor-args ${BRIDGE_L2_ADDRESS}
 
 wipe-l1-messaging:
 	yarn hardhat ignition wipe chain-31337 StarknetMessagingModule\#StarknetMessagingLocal
