@@ -17,7 +17,7 @@ if (KAKAROT_ADDRESS === "") {
 const updateFrontendData = (
   artifactPath: string,
   destPath: string,
-  address: string,
+  address: string
 ) => {
   const file = fs.readFileSync(artifactPath, "utf8");
   const json = JSON.parse(file);
@@ -28,44 +28,44 @@ const updateFrontendData = (
 
 async function main() {
   const { starknetMessaging } = await hre.ignition.deploy(
-    StarknetMessagingModule,
+    StarknetMessagingModule
   );
   const starknetMessagingAddress = await starknetMessaging.getAddress();
   console.log(`StarknetMessaging deployed to: ${starknetMessagingAddress}.`);
   updateFrontendData(
     "./ignition/deployments/chain-31337/artifacts/StarknetMessagingModule#StarknetMessagingLocal.json",
     "./ui/src/data/starknetMessagingData.json",
-    starknetMessagingAddress,
+    starknetMessagingAddress
   );
 
   const { L1KakarotMessaging } = await hre.ignition.deploy(
     L1KakarotMessagingModule,
-    { parameters: { L1KakarotMessaging: { starknetMessagingAddress } } },
+    { parameters: { L1KakarotMessaging: { starknetMessagingAddress } } }
   );
-  const address = await L1KakarotMessaging.getAddress();
+  const l1KakarotMessagingAddress = await L1KakarotMessaging.getAddress();
   await account.execute([
     {
       contractAddress: KAKAROT_ADDRESS,
-      calldata: [address, true],
+      calldata: [l1KakarotMessagingAddress, true],
       entrypoint: "set_authorized_message_sender",
     },
   ]);
   console.log(
-    `L1KakarotMessaging deployed to: ${address} and authorized for messages.`,
+    `L1KakarotMessaging deployed to: ${l1KakarotMessagingAddress} and authorized for messages.`
   );
   updateFrontendData(
     "./ignition/deployments/chain-31337/artifacts/L1KakarotMessaging#L1KakarotMessaging.json",
     "./ui/src/data/L1KakarotMessagingData.json",
-    address,
+    l1KakarotMessagingAddress
   );
 
   const { ExampleERC20L1 } = await hre.ignition.deploy(ExampleERC20L1Module);
   const exampleErc20L1Address = await ExampleERC20L1.getAddress();
   console.log(`Example ERC20 L1 deployed to ${exampleErc20L1Address}`);
   updateFrontendData(
-    "./ignition/deployments/chain-31337/artifacts/ExampleERC20L1Module#ExampleERC20.json",
+    "./ignition/deployments/chain-31337/artifacts/ExampleERC20L1Module#ExampleERC20L1.json",
     "./ui/src/data/exampleERC20L1Data.json",
-    address,
+    exampleErc20L1Address
   );
 
   const { bridgeL1 } = await hre.ignition.deploy(BridgeL1Module);
@@ -74,7 +74,7 @@ async function main() {
   updateFrontendData(
     "./ignition/deployments/chain-31337/artifacts/BridgeL1Module#BridgeL1.json",
     "./ui/src/data/bridgeL1Data.json",
-    address,
+    bridgeL1Address
   );
 }
 

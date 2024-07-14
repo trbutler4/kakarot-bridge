@@ -14,16 +14,16 @@ start:
 deploy-l1: copy-env
 	yarn hardhat run scripts/deploy_l1.ts --network l1Rpc
 
-deploy-bridge-l2-forge: copy-env
+deploy-bridge-l2-forge:
 	forge create solidity_contracts/src/BridgeL2.sol:BridgeL2 \
 	--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
-	--rpc-url http://127.0.0.1:3030
 
-deploy-erc20-l2-forge: copy-env
-	forge create solidity_contracts/src/ExampleERC20.sol:ExampleERC20 \
+deploy-erc20-l2-forge:
+	forge create solidity_contracts/src/ExampleERC20L2.sol:ExampleERC20L2 \
 	--private-key 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80 \
-	--rpc-url http://127.0.0.1:3030 \
-	--constructor-args 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+	--constructor-args 0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9 # this is l2 bridge address
+
+deploy-l2: deploy-bridge-l2-forge deploy-erc20-l2-forge
 
 wipe-l1-messaging:
 	yarn hardhat ignition wipe chain-31337 StarknetMessagingModule\#StarknetMessagingLocal

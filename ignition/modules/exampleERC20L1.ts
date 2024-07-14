@@ -9,7 +9,7 @@ if (!MM_DEV_WALLET) {
 
 const ExampleERC20L1Module = buildModule("ExampleERC20L1Module", (m) => {
   const fundingAccount = m.getParameter("fundingAccount", MM_DEV_WALLET);
-  const ExampleERC20L1 = m.contract("ExampleERC20", [fundingAccount]);
+  const ExampleERC20L1 = m.contract("ExampleERC20L1", [fundingAccount]);
 
   return { ExampleERC20L1 };
 });
