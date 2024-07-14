@@ -1,67 +1,40 @@
 import { Button } from "./Button";
-import { useBridge, useApprove } from "../hooks";
-import { useEffect, useState } from "react";
-import { useBalance, useReadContract, useAccount } from "wagmi";
-import exampleERC20L1 from "../data/exampleERC20L1Data.json";
-import exampleERC20L2 from "../data/ExampleERC20L2Data.json";
+import { useBridge, useApprove, useExampleERC20L1 } from "../hooks";
+import { useState } from "react";
+import { useReadContract, useAccount } from "wagmi";
 
 export const Bridge = () => {
-  const [bridgeAmount, setBridgeAmount] = useState<number | undefined>();
+  const [input, setInput] = useState<string>("");
+  const [bridgeAmount, setBridgeAmount] = useState<BigInt>(BigInt("0"));
   const account = useAccount();
 
-  const l1BalanceResult = useReadContract({
-    abi: exampleERC20L1.abi,
-    address: exampleERC20L1.address as `0x${string}`,
-    functionName: "balanceOf",
-    args: [account.address],
-  });
-  if (l1BalanceResult.isError) {
-    console.error(l1BalanceResult.error);
-  }
+  const { balanceResult, symbol } = useExampleERC20L1(
+    account.address as `0x${string}`,
+  );
 
-  const l2BalanceResult = useReadContract({
-    abi: exampleERC20L2.abi,
-    address: exampleERC20L2.address as `0x${string}`,
-    functionName: "balanceOf",
-    args: [account.address],
-  });
-  if (l2BalanceResult.isError) {
-    console.error(l2BalanceResult.error);
-  }
+  const { handleBridgeL1 } = useBridge();
 
-  const { data: symbol, isFetched: symbolFetched } = useReadContract({
-    abi: exampleERC20L1.abi,
-    address: exampleERC20L1.address as `0x${string}`,
-    functionName: "symbol",
-  });
-
-  const {
-    handleBridgeL1,
-    isConfirming,
-    isConfirmed,
-    isBridgeL1Error,
-    bridgeL1Error,
-    isBridgeL1Pending,
-  } = useBridge();
-
-  const {
-    handleApprove,
-    isApproved,
-    isApproving,
-    isApproveError,
-    approveError,
-  } = useApprove();
+  const { handleApprove, isApproved } = useApprove();
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
       const v = e.target.value;
-      const n = parseInt(v);
-      if (typeof n === "number") {
-        setBridgeAmount(n);
-      }
+      setInput(v);
+
+      const n = BigInt(parseInt(v) * 1e18);
+      setBridgeAmount(n);
     } catch (e) {
       console.error(e);
     }
+  };
+
+  const inputValid = (): boolean => {
+    // input contains only numbers
+    return input.match(/^[0-9]+$/) !== null;
+  };
+
+  const handleFillMax = () => {
+    setBridgeAmount(BigInt(balanceResult.data as string));
   };
 
   return (
@@ -71,14 +44,14 @@ export const Bridge = () => {
           <div className="flex flex-row justify-between">
             <p className="font-semibold text-lg">Ethereum L1</p>
             <p className="font-thin text-sm items-end">
-              {l1BalanceResult.data
-                ? (l1BalanceResult.data as BigInt).toString()
+              {balanceResult.data
+                ? (balanceResult.data as BigInt).toString()
                 : 0}
             </p>
           </div>
           <div className="flex flex-row w-full">
             <div className="border rounded-s-md px-2 font-semibold flex justify-center items-center">
-              {symbolFetched && (symbol as string)}
+              {symbol as string}
             </div>
             <div className="border rounded-e-md px-2 w-full">
               <div className="flex flex-row justify-between">
@@ -87,10 +60,9 @@ export const Bridge = () => {
                   placeholder="Enter amount"
                   className="w-full font-light"
                   onChange={handleInput}
-                  value={bridgeAmount}
+                  value={input}
                 />
-                {/*
-
+                {
                   <button
                     type="button"
                     onClick={handleFillMax}
@@ -98,21 +70,14 @@ export const Bridge = () => {
                   >
                     max
                   </button>
-                  */}
+                }
               </div>
             </div>
           </div>
         </div>
         <div className="flex flex-row justify-between">
           <p className="font-semibold text-lg">Kakarot L2</p>
-          <p className="font-thin text-sm items-end">
-            {/*
-              {l2BalanceResult.data
-                ? (l2BalanceResult.data as BigInt).toString()
-                : 0}
-              */}
-            0
-          </p>
+          <p className="font-thin text-sm items-end"></p>
         </div>
       </div>
       <div className="w-full pt-8">
@@ -124,6 +89,7 @@ export const Bridge = () => {
           }
           label={isApproved ? "Bridge" : "Approve"}
           className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
+          disabled={!inputValid()}
         />
       </div>
     </div>

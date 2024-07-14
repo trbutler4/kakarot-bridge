@@ -19,7 +19,7 @@ export const useBridge = () => {
       hash: bridgeL1Hash,
     });
 
-  const handleBridgeL1 = (amount: number) => {
+  const handleBridgeL1 = (amount: BigInt) => {
     console.log("Initiating bridge L1 to L2...");
     const value = BigInt(0.0001 * 1e18);
     writeContractBridgeL1({

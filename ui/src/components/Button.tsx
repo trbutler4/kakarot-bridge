@@ -4,14 +4,25 @@ interface ButtonProps {
   onClick: () => void;
   label: string;
   className?: string;
+  disabled?: boolean;
 }
 
-export const Button = ({ onClick, label, className }: ButtonProps) => {
+export const Button = ({
+  onClick,
+  label,
+  className,
+  disabled,
+}: ButtonProps) => {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={cn("p-2 bg-kkrt_orange rounded-xl px-4 w-full", className)}
+      className={cn(
+        "p-2 bg-kkrt_orange rounded-xl px-4 w-full",
+        className,
+        disabled && "opacity-50",
+      )}
+      disabled={disabled}
     >
       {label}
     </button>

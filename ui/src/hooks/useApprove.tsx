@@ -17,7 +17,7 @@ export const useApprove = () => {
       hash: approveHash,
     });
 
-  const handleApprove = (amount: number) => {
+  const handleApprove = (amount: BigInt) => {
     console.log("Approving token spend...");
     writeApprove({
       address: exampleERC20L1.address as `0x${string}`,
