@@ -35,6 +35,7 @@ export const Bridge = () => {
 
   const handleFillMax = () => {
     setBridgeAmount(BigInt(balanceResult.data as string));
+    setInput((BigInt(balanceResult.data as string) / BigInt(1e18)).toString());
   };
 
   return (
@@ -45,7 +46,9 @@ export const Bridge = () => {
             <p className="font-semibold text-lg">Ethereum L1</p>
             <p className="font-thin text-sm items-end">
               {balanceResult.data
-                ? (balanceResult.data as BigInt).toString()
+                ? (
+                    BigInt(balanceResult.data as string) / BigInt(1e18)
+                  ).toString()
                 : 0}
             </p>
           </div>
