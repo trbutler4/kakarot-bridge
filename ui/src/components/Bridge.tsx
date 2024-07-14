@@ -116,15 +116,15 @@ export const Bridge = () => {
         </div>
       </div>
       <div className="w-full pt-8">
-          <Button
-            onClick={
-              isApproved
-                ? () => handleBridgeL1(bridgeAmount * 1e18)
-                : () => handleApprove(bridgeAmount * 1e18)
-            }
-            label={isApproved ? "Bridge" : "Approve"}
-            className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
-          />
+        <Button
+          onClick={
+            isApproved
+              ? () => handleBridgeL1(bridgeAmount)
+              : () => handleApprove(bridgeAmount)
+          }
+          label={isApproved ? "Bridge" : "Approve"}
+          className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
+        />
       </div>
     </div>
   );
