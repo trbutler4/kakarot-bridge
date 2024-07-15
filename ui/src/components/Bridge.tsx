@@ -6,9 +6,10 @@ import { useReadContract, useAccount } from "wagmi";
 export const Bridge = () => {
   const [input, setInput] = useState<string>("");
   const [bridgeAmount, setBridgeAmount] = useState<BigInt>(BigInt("0"));
+  const [variant, setVariant] = useState<"l1tol2" | "l2tol1">("l1tol2");
   const account = useAccount();
 
-  const { balanceResult, symbol } = useExampleERC20L1(
+  const { balanceResult: l1BalanceResult, symbol } = useExampleERC20L1(
     account.address as `0x${string}`,
   );
 
@@ -34,27 +35,79 @@ export const Bridge = () => {
   };
 
   const handleFillMax = () => {
-    setBridgeAmount(BigInt(balanceResult.data as string));
-    setInput((BigInt(balanceResult.data as string) / BigInt(1e18)).toString());
+    switch (variant) {
+      case "l1tol2":
+        setInput(
+          (BigInt(l1BalanceResult.data as string) / BigInt(1e18)).toString(),
+        );
+        setBridgeAmount(BigInt(l1BalanceResult.data as string));
+        break;
+      case "l2tol1":
+        break;
+    }
   };
 
   return (
-    <div className="w-2/3 h-2/3 border-2 rounded-xl p-6 max-w-[40vw] min-w-[400px]">
+    <BridgeView
+      sourceTitle={variant === "l1tol2" ? "Ethereum L1" : "Kakarot L2"}
+      destinationTitle={variant === "l1tol2" ? "Kakarot L2" : "Ethereum L1"}
+      sourceBalance={
+        variant === "l1tol2"
+          ? l1BalanceResult.data
+            ? (BigInt(l1BalanceResult.data as string) / BigInt(1e18)).toString()
+            : "Balance"
+          : "Balance"
+      }
+      sourceSymbol={symbol as string}
+      handleInput={handleInput}
+      currentValue={input}
+      handleFillMax={handleFillMax}
+      handleBridge={
+        variant === "l1tol2"
+          ? isApproved
+            ? () => handleBridgeL1(bridgeAmount)
+            : () => handleApprove(bridgeAmount)
+          : () => console.log("l2tol1")
+      }
+      inputValid={inputValid}
+    />
+  );
+};
+
+interface BridgeViewProps {
+  sourceTitle: string;
+  destinationTitle: string;
+  sourceBalance: string;
+  sourceSymbol: string;
+  handleInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  currentValue: string;
+  handleFillMax: () => void;
+  handleBridge: () => void;
+  inputValid: () => boolean;
+}
+
+const BridgeView = ({
+  sourceTitle,
+  destinationTitle,
+  sourceBalance,
+  sourceSymbol,
+  handleInput,
+  currentValue,
+  handleFillMax,
+  handleBridge,
+  inputValid,
+}: BridgeViewProps) => {
+  return (
+    <div className="w-2/3 h-2/3 border-2 rounded-xl p-6 max-w-[40vw] min-w-[400px] shadow-xl">
       <div className="flex flex-col justify-evenly space-y-4">
         <div>
           <div className="flex flex-row justify-between">
-            <p className="font-semibold text-lg">Ethereum L1</p>
-            <p className="font-thin text-sm items-end">
-              {balanceResult.data
-                ? (
-                    BigInt(balanceResult.data as string) / BigInt(1e18)
-                  ).toString()
-                : 0}
-            </p>
+            <p className="font-semibold text-lg">{sourceTitle}</p>
+            <p className="font-thin text-sm items-end">{sourceBalance}</p>
           </div>
           <div className="flex flex-row w-full">
             <div className="border rounded-s-md px-2 font-semibold flex justify-center items-center">
-              {symbol as string}
+              {sourceSymbol}
             </div>
             <div className="border rounded-e-md px-2 w-full">
               <div className="flex flex-row justify-between">
@@ -63,7 +116,7 @@ export const Bridge = () => {
                   placeholder="Enter amount"
                   className="w-full font-light"
                   onChange={handleInput}
-                  value={input}
+                  value={currentValue}
                 />
                 {
                   <button
@@ -79,18 +132,14 @@ export const Bridge = () => {
           </div>
         </div>
         <div className="flex flex-row justify-between">
-          <p className="font-semibold text-lg">Kakarot L2</p>
+          <p className="font-semibold text-lg">{destinationTitle}</p>
           <p className="font-thin text-sm items-end"></p>
         </div>
       </div>
       <div className="w-full pt-8">
         <Button
-          onClick={
-            isApproved
-              ? () => handleBridgeL1(bridgeAmount)
-              : () => handleApprove(bridgeAmount)
-          }
-          label={isApproved ? "Bridge" : "Approve"}
+          onClick={handleBridge}
+          label="Bridge"
           className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
           disabled={!inputValid()}
         />
