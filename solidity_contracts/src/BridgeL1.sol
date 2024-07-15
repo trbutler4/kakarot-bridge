@@ -55,17 +55,23 @@ contract BridgeL1 {
         );
     }
 
-    function consumeBridgeToL1(bytes calldata payload) external {
+    function consumeBridgeToL1(
+        address l1ERC20Address,
+        bytes calldata payload
+    ) external {
         // Will revert if the message is not consumable.
         // Delegatecall to _l1KakarotMessaging
-        (bool success, ) = address(_l1KakarotMessaging).delegatecall(
+        (bool consumeSuccess, ) = address(_l1KakarotMessaging).delegatecall(
             abi.encodeWithSignature("consumeMessageFromL2(bytes)", payload)
         );
-        require(success, "message consumption failed");
+        require(consumeSuccess, "message consumption failed");
 
-        // Decode the uint256 value from the payload
-        // TODO: update this to mint tokens on L1
-        uint256 value = abi.decode(payload, (uint256));
-        receivedMessagesCounter += value;
+        (bool bridgeSuccess, ) = address(l1ERC20Address).call(
+            abi.encodeWithSignature(
+                "transferFrom(address,address,amount)",
+                payload
+            )
+        );
+        require(bridgeSuccess, "bridging failed");
     }
 }

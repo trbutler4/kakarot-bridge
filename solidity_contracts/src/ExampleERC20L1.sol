@@ -9,6 +9,6 @@ import "../lib/openzeppelin-contracts/contracts/token/ERC20/ERC20.sol";
 // implementations.
 contract ExampleERC20L1 is ERC20 {
     constructor(address fundingAccount) ERC20("ExampleERC20", "TEST") {
-        _mint(fundingAccount, 1000000 * (10 ** 18));
+        _mint(fundingAccount, 1_000_000 * (10 ** 18));
     }
 }

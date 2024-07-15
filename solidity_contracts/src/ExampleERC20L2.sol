@@ -11,12 +11,10 @@ contract ExampleERC20L2 is ERC20, ERC20Burnable, Ownable {
         address l2BridgeAddress
     ) ERC20("ExampleERC20", "TEST") Ownable(l2BridgeAddress) {}
 
-    // NOTE: this should only be callable by the L2 bridge contract
     function mint(address account, uint256 amount) public onlyOwner {
         _mint(account, amount);
     }
 
-    // NOTE: this should only be callable by the L2 bridge contract
     function burn(address account, uint256 amount) public onlyOwner {
         _burn(account, amount);
     }
