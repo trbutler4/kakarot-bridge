@@ -18,7 +18,7 @@ export const Button = ({
       type="button"
       onClick={onClick}
       className={cn(
-        "p-2 bg-kkrt_orange rounded-xl px-4 w-full",
+        "p-2 text-kkrt_green bg-kkrt_orange rounded-xl px-4 w-full flex justify-center items-center",
         className,
         disabled && "opacity-50",
       )}

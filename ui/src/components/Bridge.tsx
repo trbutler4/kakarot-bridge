@@ -1,13 +1,26 @@
 import { Button } from "./Button";
 import { useBridge, useApprove, useExampleERC20L1 } from "../hooks";
 import { useState } from "react";
-import { useReadContract, useAccount } from "wagmi";
+import { useReadContract, useAccount, useSwitchChain } from "wagmi";
+import { useEffect } from "react";
 
 export const Bridge = () => {
   const [input, setInput] = useState<string>("");
   const [bridgeAmount, setBridgeAmount] = useState<BigInt>(BigInt("0"));
   const [variant, setVariant] = useState<"l1tol2" | "l2tol1">("l1tol2");
   const account = useAccount();
+  const { chains, switchChain } = useSwitchChain();
+
+  useEffect(() => {
+    switch (variant) {
+      case "l1tol2":
+        switchChain({ chainId: 31337 });
+        break;
+      case "l2tol1":
+        switchChain({ chainId: 1802203764 });
+        break;
+    }
+  }, [variant]);
 
   const { balanceResult: l1BalanceResult, symbol } = useExampleERC20L1(
     account.address as `0x${string}`,
@@ -29,11 +42,6 @@ export const Bridge = () => {
     }
   };
 
-  const inputValid = (): boolean => {
-    // input contains only numbers
-    return input.match(/^[0-9]+$/) !== null;
-  };
-
   const handleFillMax = () => {
     switch (variant) {
       case "l1tol2":
@@ -43,6 +51,17 @@ export const Bridge = () => {
         setBridgeAmount(BigInt(l1BalanceResult.data as string));
         break;
       case "l2tol1":
+        break;
+    }
+  };
+
+  const handleSwapVariant = () => {
+    switch (variant) {
+      case "l1tol2":
+        setVariant("l2tol1");
+        break;
+      case "l2tol1":
+        setVariant("l1tol2");
         break;
     }
   };
@@ -69,7 +88,7 @@ export const Bridge = () => {
             : () => handleApprove(bridgeAmount)
           : () => console.log("l2tol1")
       }
-      inputValid={inputValid}
+      handleSwapVariant={handleSwapVariant}
     />
   );
 };
@@ -83,9 +102,8 @@ interface BridgeViewProps {
   currentValue: string;
   handleFillMax: () => void;
   handleBridge: () => void;
-  inputValid: () => boolean;
+  handleSwapVariant: () => void;
 }
-
 const BridgeView = ({
   sourceTitle,
   destinationTitle,
@@ -95,8 +113,12 @@ const BridgeView = ({
   currentValue,
   handleFillMax,
   handleBridge,
-  inputValid,
+  handleSwapVariant,
 }: BridgeViewProps) => {
+  const inputValid = (): boolean => {
+    // input contains only numbers
+    return currentValue.match(/^[0-9]+$/) !== null;
+  };
   return (
     <div className="w-2/3 h-2/3 border-2 rounded-xl p-6 max-w-[40vw] min-w-[400px] shadow-xl">
       <div className="flex flex-col justify-evenly space-y-4">
@@ -130,6 +152,13 @@ const BridgeView = ({
               </div>
             </div>
           </div>
+        </div>
+        <div className="flex justify-center items-center  py-4">
+          <Button
+            onClick={handleSwapVariant}
+            label="Switch bridge direction"
+            className="text-kkrt_green text-opacity-90 h-6 text-sm w-52"
+          />
         </div>
         <div className="flex flex-row justify-between">
           <p className="font-semibold text-lg">{destinationTitle}</p>
