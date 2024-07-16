@@ -1,7 +1,12 @@
 import { Button } from "./Button";
-import { useBridge, useApprove, useExampleERC20L1 } from "../hooks";
+import {
+  useBridge,
+  useApprove,
+  useExampleERC20L1,
+  useExampleERC20L2,
+} from "../hooks";
 import { useState } from "react";
-import { useReadContract, useAccount, useSwitchChain } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import { useEffect } from "react";
 
 export const Bridge = () => {
@@ -9,7 +14,7 @@ export const Bridge = () => {
   const [bridgeAmount, setBridgeAmount] = useState<BigInt>(BigInt("0"));
   const [variant, setVariant] = useState<"l1tol2" | "l2tol1">("l1tol2");
   const account = useAccount();
-  const { chains, switchChain } = useSwitchChain();
+  const { switchChain } = useSwitchChain();
 
   useEffect(() => {
     switch (variant) {
@@ -25,6 +30,9 @@ export const Bridge = () => {
   const { balanceResult: l1BalanceResult, symbol } = useExampleERC20L1(
     account.address as `0x${string}`,
   );
+
+  const { balanceResult: l2BalanceResult, symbol: l2Symbol } =
+    useExampleERC20L2(account.address as `0x${string}`);
 
   const { handleBridgeL1 } = useBridge();
 
@@ -43,14 +51,16 @@ export const Bridge = () => {
   };
 
   const handleFillMax = () => {
+    const updateInput = (balance: string) => {
+      setInput((BigInt(balance) / BigInt(1e18)).toString());
+      setBridgeAmount(BigInt(balance));
+    };
     switch (variant) {
       case "l1tol2":
-        setInput(
-          (BigInt(l1BalanceResult.data as string) / BigInt(1e18)).toString(),
-        );
-        setBridgeAmount(BigInt(l1BalanceResult.data as string));
+        updateInput(l1BalanceResult.data as string);
         break;
       case "l2tol1":
+        updateInput(l2BalanceResult.data as string);
         break;
     }
   };
@@ -66,6 +76,10 @@ export const Bridge = () => {
     }
   };
 
+  const parseBalance = (balance: string) => {
+    return (BigInt(balance) / BigInt(1e18)).toString();
+  };
+
   return (
     <BridgeView
       sourceTitle={variant === "l1tol2" ? "Ethereum L1" : "Kakarot L2"}
@@ -73,9 +87,11 @@ export const Bridge = () => {
       sourceBalance={
         variant === "l1tol2"
           ? l1BalanceResult.data
-            ? (BigInt(l1BalanceResult.data as string) / BigInt(1e18)).toString()
+            ? parseBalance(l1BalanceResult.data as string)
             : "Balance"
-          : "Balance"
+          : l2BalanceResult.data
+            ? parseBalance(l2BalanceResult.data as string)
+            : "Balance"
       }
       sourceSymbol={symbol as string}
       handleInput={handleInput}
