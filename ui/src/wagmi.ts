@@ -1,11 +1,19 @@
 import { http, createConfig } from "wagmi";
-import { kakarotSepolia } from "wagmi/chains";
 import { injected } from "wagmi/connectors";
 import { defineChain } from "viem";
 
 export const kakarotLocal = defineChain({
-  id: 31337,
+  id: 1263227476,
   name: "Kakarot Local",
+  nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  rpcUrls: {
+    default: { http: ["http://localhost:3030"] },
+  },
+});
+
+export const anvilLocal = defineChain({
+  id: 31337,
+  name: "Anvil Local",
   nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   rpcUrls: {
     default: { http: ["http://localhost:8545"] },
@@ -13,10 +21,10 @@ export const kakarotLocal = defineChain({
 });
 
 export const config = createConfig({
-  chains: [kakarotSepolia, kakarotLocal],
+  chains: [anvilLocal, kakarotLocal],
   connectors: [injected()],
   transports: {
-    [kakarotSepolia.id]: http(),
+    [anvilLocal.id]: http(),
     [kakarotLocal.id]: http(),
   },
 });

@@ -22,7 +22,7 @@ export const Bridge = () => {
         switchChain({ chainId: 31337 });
         break;
       case "l2tol1":
-        switchChain({ chainId: 1802203764 });
+        switchChain({ chainId: 1263227476 });
         break;
     }
   }, [variant]);
@@ -104,6 +104,9 @@ export const Bridge = () => {
             : () => handleApprove(bridgeAmount)
           : () => console.log("l2tol1")
       }
+      bridgeButtonLabel={
+        variant === "l1tol2" ? (isApproved ? "Bridge" : "Approve") : "Bridge"
+      }
       handleSwapVariant={handleSwapVariant}
     />
   );
@@ -119,6 +122,7 @@ interface BridgeViewProps {
   handleFillMax: () => void;
   handleBridge: () => void;
   handleSwapVariant: () => void;
+  bridgeButtonLabel: string;
 }
 const BridgeView = ({
   sourceTitle,
@@ -130,6 +134,7 @@ const BridgeView = ({
   handleFillMax,
   handleBridge,
   handleSwapVariant,
+  bridgeButtonLabel,
 }: BridgeViewProps) => {
   const inputValid = (): boolean => {
     // input contains only numbers
@@ -184,7 +189,7 @@ const BridgeView = ({
       <div className="w-full pt-8">
         <Button
           onClick={handleBridge}
-          label="Bridge"
+          label={bridgeButtonLabel}
           className="font-bold tracking-wide text-kg text-kkrt_green text-opacity-90"
           disabled={!inputValid()}
         />
